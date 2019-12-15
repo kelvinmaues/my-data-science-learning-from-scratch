@@ -1,3 +1,4 @@
+from __future__ import division
 
 # A small list of users - "dict"
 users = [
@@ -48,3 +49,15 @@ print("Total connections", total_connections)
 
 # Checking confidence
 assert total_connections == 24
+
+
+# Calculating the average number of connections
+# Number of users
+num_users = len(users)
+# Average connections
+avg_connections = total_connections / num_users
+print("Avg connections", avg_connections)
+
+# Checking confidence
+assert num_users == 10
+assert avg_connections == 2.4
