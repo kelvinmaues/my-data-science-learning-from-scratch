@@ -45,3 +45,6 @@ def number_of_friends(user):
 total_connections = sum(number_of_friends(user) for user in users)
 # Printing out the total connections number
 print("Total connections", total_connections)
+
+# Checking confidence
+assert total_connections == 24
