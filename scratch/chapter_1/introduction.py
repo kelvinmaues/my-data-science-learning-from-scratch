@@ -90,3 +90,11 @@ assert number_of_friends_by_id[-1] == (9, 1) # user 9 has only 1 friend
 
 # GOAL => Estimulate more connection between the members
 # So, develop suggestion of "data scientists you may know"
+
+# First instict is suggest an user may know friends of friends
+
+# A function to iterate over a friend of users, iterate over
+# friends of that person
+def friends_of_friends_ids_bad(user):
+  user_id = user["id"]
+  return
