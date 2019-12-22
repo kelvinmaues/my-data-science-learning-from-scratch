@@ -84,9 +84,9 @@ assert number_of_friends_by_id[-1] == (9, 1) # user 9 has only 1 friend
 
 # These bunch of code above were important to compute
 # a metric network of degree of centrality
-# PT-BR: uma rede métrica de grau de centralidade
+# PT-BR: uma rede metrica de grau de centralidade
 # e pode ser representada por uma rede grafos determinando
-# suas conexões
+# suas conexoes
 
 # GOAL => Estimulate more connection between the members
 # So, develop suggestion of "data scientists you may know"
@@ -95,6 +95,23 @@ assert number_of_friends_by_id[-1] == (9, 1) # user 9 has only 1 friend
 
 # A function to iterate over a friend of users, iterate over
 # friends of that person
-def friends_of_friends_ids_bad(user):
-  user_id = user["id"]
-  return
+def foaf_ids_bad(user):
+    """foaf is short for "friend of a friend" """
+    return [foaf_id
+            for friend_id in friendships[user["id"]] # for each friend of a user
+            for foaf_id in friendships[friend_id]] # take their friends
+
+[0, 2, 3, 0, 1, 3] # result for user[0]
+
+print('user[0]', users[0])
+print('foaf to user[0]', foaf_ids_bad(users[0]))
+
+assert foaf_ids_bad(users[0]) == [0, 2, 3, 0, 1, 3]
+
+print("friendships[0]", friendships[0]) # [1, 2]
+print("friendships[1]", friendships[1]) # [0, 2, 3]
+print("friendships[2]", friendships[2]) # [0, 1, 3]
+
+assert friendships[0] == [1, 2]
+assert friendships[1] == [0, 2, 3]
+assert friendships[2] == [0, 1, 3]
