@@ -115,3 +115,19 @@ print("friendships[2]", friendships[2]) # [0, 1, 3]
 assert friendships[0] == [1, 2]
 assert friendships[1] == [0, 2, 3]
 assert friendships[2] == [0, 1, 3]
+
+from collections import Counter
+
+def friends_of_friends(user):
+  user_id = user["id"]
+  return Counter(
+    foaf_id
+    for friend_id in friendships[user_id]   # For each of my friends
+    for foaf_id in friendships[friend_id]   # find their friends
+    if foaf_id != user_id                   # who aren't me
+    and foaf_id not in friendships[user_id] # and aren't my friends
+  )
+
+print(friends_of_friends(users[3])) # Counter({0: 2, 5: 1})
+
+assert friends_of_friends(users[3]) == Counter({0: 2, 5: 1})
