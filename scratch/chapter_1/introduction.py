@@ -17,6 +17,9 @@ users = [
     { "id": 9, "name": "Klein" }
 ]
 
+print("----------------------------------------")
+
+
 # Friend pairs related - an array of tuples
 friendship_pairs = [(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (3, 4),
                     (4, 5), (5, 6), (5, 7), (6, 8), (7, 8), (8, 9)]
@@ -32,6 +35,8 @@ for i, j in friendship_pairs:
   friendships[i].append(j) # add j as a friend of i
   friendships[j].append(i) # add i as a friend of j
 print("Friendships with friends connections", friendships)
+
+print("----------------------------------------")
 
 # First question: "what is the average number of connections?"
 # Steps:
@@ -53,7 +58,6 @@ print("Total connections", total_connections)
 # Checking confidence
 assert total_connections == 24
 
-
 # Calculating the average number of connections
 # Number of users
 num_users = len(users)
@@ -65,10 +69,12 @@ print("Avg connections", avg_connections)
 assert num_users == 10
 assert avg_connections == 2.4
 
+print("----------------------------------------")
+
 # Also, find the people more connected
 # Sort from largest to smallest
 
-# Create a list (user_id, number_of_friends)
+# Create a list (user_id, number_of_friends) as tuples
 number_of_friends_by_id = [(user["id"], number_of_friends(user)) for user in users]
 # Printing out the number of friends
 # Each pair is (user_id, num_friends):
@@ -82,6 +88,8 @@ print("Number of friends sorted", number_of_friends_by_id)
 assert number_of_friends_by_id[0][1] == 3 # several people have 3 friends
 assert number_of_friends_by_id[-1] == (9, 1) # user 9 has only 1 friend
 
+print("----------------------------------------")
+
 # These bunch of code above were important to compute
 # a metric network of degree of centrality
 # PT-BR: uma rede metrica de grau de centralidade
@@ -89,7 +97,7 @@ assert number_of_friends_by_id[-1] == (9, 1) # user 9 has only 1 friend
 # suas conexoes
 
 # GOAL => Estimulate more connection between the members
-# So, develop suggestion of "data scientists you may know"
+# So, develop suggestions of "data scientists you may know"
 
 # First instict is suggest an user may know friends of friends
 
@@ -108,6 +116,9 @@ print('foaf to user[0]', foaf_ids_bad(users[0]))
 
 assert foaf_ids_bad(users[0]) == [0, 2, 3, 0, 1, 3]
 
+print("----------------------------------------")
+
+
 print("friendships[0]", friendships[0]) # [1, 2]
 print("friendships[1]", friendships[1]) # [0, 2, 3]
 print("friendships[2]", friendships[2]) # [0, 1, 3]
@@ -116,7 +127,10 @@ assert friendships[0] == [1, 2]
 assert friendships[1] == [0, 2, 3]
 assert friendships[2] == [0, 1, 3]
 
-from collections import Counter
+print("----------------------------------------")
+
+
+from collections import Counter # não carregador por padrão
 
 def friends_of_friends(user):
   user_id = user["id"]
@@ -128,9 +142,11 @@ def friends_of_friends(user):
     and foaf_id not in friendships[user_id] # and aren't my friends
   )
 
-print(friends_of_friends(users[3])) # Counter({0: 2, 5: 1})
+print(friends_of_friends(users[3]))     # Counter({0: 2, 5: 1})
 
 assert friends_of_friends(users[3]) == Counter({0: 2, 5: 1})
+
+print("----------------------------------------")
 
 # As a Data Scientist, you know you like to find users with
 # similar interests "competencia significativa"
@@ -182,7 +198,12 @@ for user_id, interest in interests:
   interests_by_user_id[user_id].append(interest)
   
 print("user_ids_by_interest", user_ids_by_interest)
+
+print("----------------------------------------")
+
 print("interests_by_user_id", interests_by_user_id)
+
+print("----------------------------------------")
 
 def most_common_interests_with(user):
     return Counter(
@@ -193,3 +214,96 @@ def most_common_interests_with(user):
     )
 
 print('most common interests with user[1]', most_common_interests_with(users[1]))
+
+print("----------------------------------------")
+
+# Goal => Salaries and Expertise
+# Give a list of anonymous salaries and years of experience.
+
+salaries_and_tenures = [(83000, 8.7), (88000, 8.1),
+                        (48000, 0.7), (76000, 6),
+                        (69000, 6.5), (76000, 7.5),
+                        (60000, 2.5), (83000, 10),
+                        (48000, 1.9), (63000, 4.2)]
+
+# The keys are years, values are lists of the salaries for each tenure.
+salary_by_tenure = defaultdict(list)
+
+for salary, tenure in salaries_and_tenures:
+  salary_by_tenure[tenure].append(salary)
+
+# The keys are years, each value is average salary for that tenure
+average_salary_by_tenure = {
+  tenure: sum(salaries) / len(salaries)
+  for tenure, salaries in salary_by_tenure.items()
+}
+
+assert average_salary_by_tenure == {
+    0.7: 48000.0,
+    1.9: 48000.0,
+    2.5: 60000.0,
+    4.2: 63000.0,
+    6: 76000.0,
+    6.5: 69000.0,
+    7.5: 76000.0,
+    8.1: 88000.0,
+    8.7: 83000.0,
+    10: 83000.0
+}
+
+print("Average salary by tenure", average_salary_by_tenure)
+
+print("----------------------------------------")
+
+# Function to group cases
+def tenure_bucket(tenure):
+  if tenure < 2:
+    return "less than two"
+  elif tenure < 5:
+    return "between two and five"
+  else:
+    return "more than five"
+
+# Keys are tenure buckets, values are list of salaries for that bucket
+salary_by_tenure_bucket = defaultdict(list)
+
+# Grouping salaries by tenure bucket
+for salary, tenure in salaries_and_tenures:
+    bucket = tenure_bucket(tenure)
+    salary_by_tenure_bucket[bucket].append(salary)
+
+# Calculating the salary average by tenure
+# Keys are tenure buckets, values are average salary for that bucket
+average_salary_by_bucket = {
+  tenure_bucket: sum(salaries) / len(salaries)
+  for tenure_bucket, salaries in salary_by_tenure_bucket.items()
+}
+
+print("Average salary by bucket", average_salary_by_bucket)
+
+print("----------------------------------------")
+
+# Goal => Try to predict paid and unpaid accounts
+# Missing more data about it
+
+def predict_paid_or_unpaid(years_of_experience):
+  if years_of_experience < 3.0:
+    return "paid"
+  elif years_of_experience < 8.5:
+    return "unpaid"
+  else:
+    return "paid"
+
+
+# Goal => Planning blog content to the year by interests
+
+# Couting words
+words_and_counts = Counter(
+  word for user, interest in interests
+  for word in interest.lower().split()
+)  
+
+# Printing
+for word, count in words_and_counts.most_common():
+  if count > 1:
+    print("Word and count: ", word, count)
